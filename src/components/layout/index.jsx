@@ -1,7 +1,6 @@
 import React from 'react';
 import { Layout, theme } from 'antd';
 import Sidebar from './sidebar';
-import useStore from '../../store';
 import AppContent from './content';
 import AppHeader from './header';
 

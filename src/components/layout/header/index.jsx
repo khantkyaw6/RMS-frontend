@@ -1,14 +1,30 @@
 import React from 'react';
-import useStore from '../../../store';
 import { Button, Layout, theme } from 'antd';
 const { Header } = Layout;
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import {
+	MenuFoldOutlined,
+	MenuUnfoldOutlined,
+	UserOutlined,
+} from '@ant-design/icons';
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleCollapsed } from '../../../features/layout/collapsedSlice';
 
 const AppHeader = () => {
-	const { sidebar, sidebarTrigger } = useStore();
+	const dispatch = useDispatch();
+	const collapsed = useSelector((state) => state.collapsedReducer);
 	const {
 		token: { colorBgContainer },
 	} = theme.useToken();
+
+	const handleCollapse = () => {
+		dispatch(toggleCollapsed());
+	};
+
+	const iconStyle = {
+		fontSize: '16px',
+		width: 64,
+		height: 64,
+	};
 
 	return (
 		<Header
@@ -21,15 +37,16 @@ const AppHeader = () => {
 		>
 			<Button
 				type='text'
-				icon={sidebar ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-				onClick={() => sidebarTrigger()}
-				style={{
-					fontSize: '16px',
-					width: 64,
-					height: 64,
-				}}
+				icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+				onClick={handleCollapse}
+				style={iconStyle}
 			/>
-			<Button />
+			<Button
+				icon={<UserOutlined />}
+				style={iconStyle}
+				type='text'
+				shape='circle'
+			/>
 		</Header>
 	);
 };

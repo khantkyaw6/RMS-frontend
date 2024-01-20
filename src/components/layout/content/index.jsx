@@ -15,6 +15,7 @@ const AppContent = () => {
 				minHeight: 280,
 				background: colorBgContainer,
 				borderRadius: borderRadiusLG,
+				overflow: 'auto',
 			}}
 		>
 			<Col span={24}>

@@ -5,6 +5,7 @@ import { usePostLoginMutation } from '../../../features/login/loginApi';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectToken, setToken } from '../../../features/user/userSlice';
+import { setLocalStorage } from '../../../utils/localStorage';
 
 const Login = () => {
 	const [postLogin, { isLoading }] = usePostLoginMutation();
@@ -27,6 +28,7 @@ const Login = () => {
 			}
 
 			if (data.isSuccess) {
+				await setLocalStorage(data.data);
 				dispatch(setToken(data.data.token));
 				navigate('/dashboard');
 			}

@@ -4,16 +4,25 @@ import ErrorPage from '../../components/error-page';
 import AppLayout from '../../components/layout';
 import Application from '../../components/application';
 import Dashboard from '../../components/dashboard';
+import PrivateRoutes from './PrivateRoutes';
 
 function Router() {
 	const router = createBrowserRouter([
 		{
 			path: '/login',
-			element: <Login />,
+			element: (
+				<PrivateRoutes>
+					<Login />
+				</PrivateRoutes>
+			),
 		},
 		{
 			path: '/',
-			element: <AppLayout />,
+			element: (
+				<PrivateRoutes>
+					<AppLayout />
+				</PrivateRoutes>
+			),
 			children: [
 				{
 					path: '/dashboard',

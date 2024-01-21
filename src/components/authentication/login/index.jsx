@@ -16,24 +16,18 @@ const Login = () => {
 	console.log(token);
 
 	const onFinish = async (values) => {
-		const { email, password } = values;
-		console.log({ email, password });
-		try {
-			const { data } = await postLogin(values);
+		console.log(values);
 
-			console.log(data);
+		const { data } = await postLogin(values);
 
-			if (!data.isSuccess) {
-				console.log(data.message);
-			}
+		if (!data?.isSuccess) {
+			console.log(data.message);
+		}
 
-			if (data.isSuccess) {
-				await setLocalStorage(data.data);
-				dispatch(setToken(data.data.token));
-				navigate('/dashboard');
-			}
-		} catch (error) {
-			console.log(error);
+		if (data.isSuccess) {
+			await setLocalStorage(data.data);
+			dispatch(setToken(data.data.token));
+			navigate('/dashboard');
 		}
 	};
 

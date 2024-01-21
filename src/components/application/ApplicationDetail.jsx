@@ -12,11 +12,11 @@ const ApplicationDetail = ({ id }) => {
 	return (
 		<div>
 			<Row>
-				<Col span={8}>
+				<Col span={10}>
 					<Card
 						hoverable
 						style={{
-							width: 300,
+							width: 350,
 						}}
 						cover={
 							<img
@@ -33,18 +33,20 @@ const ApplicationDetail = ({ id }) => {
 						<p>Gender - {appDetail?.data.gender}</p>
 					</Card>
 				</Col>
-				<Col span={16}>
+				<Col span={14}>
 					<p>Education - {appDetail?.data.education}</p>
 					<p>Skill - {appDetail?.data.skills.join(', ')}</p>
 					<br />
-					<p style={{ fontWeight: 'bold' }}>Working Experience</p>
+					{appDetail?.data.working_exp.length > 0 && (
+						<p style={{ fontWeight: 'bold' }}>Working Experience</p>
+					)}
 
 					{appDetail?.data.working_exp.map((exp, index) => (
 						<div key={index}>
 							<h5>Company Name - {exp.companyName}</h5>
 							<p>Position - {exp.position}</p>
 							<p>
-								Start Date -
+								Start Date - {` `}
 								{exp.startDate
 									? new Date(
 											exp.startDate
@@ -52,7 +54,7 @@ const ApplicationDetail = ({ id }) => {
 									: 'N/A'}
 							</p>
 							<p>
-								End Date -
+								End Date - {` `}
 								{exp.endDate
 									? new Date(exp.endDate).toLocaleDateString(
 											'en-GB'

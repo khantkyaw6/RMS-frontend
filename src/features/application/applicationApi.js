@@ -2,14 +2,16 @@ import baseUrl from '../../config/hooks';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 export const applicationApi = createApi({
+	reducerPath: 'applicationApi',
 	baseQuery: baseUrl,
+	tagTypes: ['Application'],
 	endpoints: (builder) => ({
 		getApplication: builder.query({
 			query: () => ({
 				url: '/application',
 				method: 'GET',
 			}),
-			providesTags: ['application'],
+			providesTags: ['Application'],
 		}),
 		getApplicationDetail: builder.query({
 			query: (id) => {
@@ -18,20 +20,29 @@ export const applicationApi = createApi({
 					method: 'GET',
 				};
 			},
-			providesTags: ['application'],
+			providesTags: ['Application'],
+		}),
+		createApplication: builder.mutation({
+			query: (data) => ({
+				url: '/application',
+				method: 'POST',
+				body: data,
+			}),
+			invalidatesTags: ['Application'],
 		}),
 		deleteApplication: builder.mutation({
 			query: (id) => ({
 				url: `/application/${id}`,
 				method: 'POST',
 			}),
-			invalidatesTags: ['application'],
+			invalidatesTags: ['Application'],
 		}),
 	}),
 });
 
 export const {
-	useGetApplicationQuery,
 	useGetApplicationDetailQuery,
+	useCreateApplicationMutation,
 	useDeleteApplicationMutation,
+	useGetApplicationQuery,
 } = applicationApi;

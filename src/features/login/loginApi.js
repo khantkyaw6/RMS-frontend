@@ -2,6 +2,7 @@ import baseUrl from '../../config/hooks';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 export const loginApi = createApi({
+	reducerPath: 'loginApi',
 	baseQuery: baseUrl,
 	endpoints: (builder) => ({
 		postLogin: builder.mutation({

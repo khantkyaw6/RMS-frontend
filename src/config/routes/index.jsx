@@ -5,6 +5,7 @@ import AppLayout from '../../components/layout';
 import Application from '../../components/application';
 import Dashboard from '../../components/dashboard';
 import PrivateRoutes from './PrivateRoutes';
+import WorkExperience from '../../components/work-experience';
 
 function Router() {
 	const router = createBrowserRouter([
@@ -31,6 +32,10 @@ function Router() {
 				{
 					path: '/application',
 					element: <Application />,
+				},
+				{
+					path: '/experience',
+					element: <WorkExperience />,
 				},
 			],
 		},

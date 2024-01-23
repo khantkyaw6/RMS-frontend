@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleCollapsed } from '../../../features/layout/collapsedSlice';
+import Profile from './Profile';
 
 const AppHeader = () => {
 	const dispatch = useDispatch();
@@ -41,12 +42,13 @@ const AppHeader = () => {
 				onClick={handleCollapse}
 				style={iconStyle}
 			/>
-			<Button
+			<Profile />
+			{/* <Button
 				icon={<UserOutlined />}
 				style={iconStyle}
 				type='text'
 				shape='circle'
-			/>
+			/> */}
 		</Header>
 	);
 };

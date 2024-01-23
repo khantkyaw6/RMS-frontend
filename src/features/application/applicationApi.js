@@ -30,6 +30,14 @@ export const applicationApi = createApi({
 			}),
 			invalidatesTags: ['Application'],
 		}),
+		updateApplication: builder.mutation({
+			query: ({ id, data }) => ({
+				url: `/application/${id}`,
+				method: 'PUT',
+				body: data,
+			}),
+			invalidatesTags: ['Application'],
+		}),
 		deleteApplication: builder.mutation({
 			query: (id) => ({
 				url: `/application/${id}`,
@@ -43,6 +51,7 @@ export const applicationApi = createApi({
 export const {
 	useGetApplicationDetailQuery,
 	useCreateApplicationMutation,
+	useUpdateApplicationMutation,
 	useDeleteApplicationMutation,
 	useGetApplicationQuery,
 } = applicationApi;

@@ -1,11 +1,28 @@
+import { Table } from 'antd';
 import { useGetAdminsQuery } from '../../features/admin/adminApi';
 
 const Dashboard = () => {
-	const { data } = useGetAdminsQuery();
+	const { data: adminData } = useGetAdminsQuery();
 
-	console.log(data);
+	console.log(adminData);
 
-	return <div>Dashboard</div>;
+	const columns = [
+		{ title: 'Admin Email', dataIndex: 'email', key: 'email' },
+	];
+
+	const formattedData = adminData?.data.map((admin, index) => ({
+		email: admin.email,
+		key: index,
+	}));
+
+	return (
+		<div>
+			<h3>This Dashboard Show Admin List</h3>
+
+			<hr />
+			<Table columns={columns} dataSource={formattedData} />
+		</div>
+	);
 };
 
 export default Dashboard;

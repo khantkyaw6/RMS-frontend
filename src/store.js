@@ -5,6 +5,7 @@ import userReducer from './features/user/userSlice';
 import { loginApi } from './features/login/loginApi';
 import { applicationApi } from './features/application/applicationApi';
 import { adminApi } from './features/admin/adminApi';
+import { workExperienceApi } from './features/work-experience/workExperienceApi';
 
 const store = configureStore({
 	reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
 		[loginApi.reducerPath]: loginApi.reducer,
 		[adminApi.reducerPath]: adminApi.reducer,
 		[applicationApi.reducerPath]: applicationApi.reducer,
+		[workExperienceApi.reducerPath]: workExperienceApi.reducer,
 	},
 
 	middleware: (getDefaultMiddleware) =>
@@ -20,6 +22,7 @@ const store = configureStore({
 			loginApi.middleware,
 			applicationApi.middleware,
 			adminApi.middleware,
+			workExperienceApi.middleware,
 		]),
 });
 

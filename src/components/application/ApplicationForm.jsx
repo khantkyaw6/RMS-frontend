@@ -1,10 +1,16 @@
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import { MailOutlined, PhoneOutlined } from '@ant-design/icons';
-import moment from 'moment';
-import { useCreateApplicationMutation } from '../../features/application/applicationApi';
+import {
+	useCreateApplicationMutation,
+	useUpdateApplicationMutation,
+} from '../../features/application/applicationApi';
+import { useEffect, useState } from 'react';
 
-const ApplicationForm = ({ handleOk }) => {
+const ApplicationForm = ({ updateForm, handleOk }) => {
 	const [createApplication, { isLoading }] = useCreateApplicationMutation();
+	const [updateApplication, { isLoading: updateLoading }] =
+		useUpdateApplicationMutation();
+	const [updateApplicationId, setUpdateApplicationId] = useState(null);
 
 	const options = [
 		{
@@ -23,9 +29,21 @@ const ApplicationForm = ({ handleOk }) => {
 
 	const [form] = Form.useForm();
 
+	useEffect(() => {
+		form.setFieldsValue({
+			name: updateForm.name,
+			email: updateForm.email,
+			phone: updateForm.phone,
+			gender: updateForm.gender,
+			education: updateForm.education,
+			skills: updateForm.skills,
+		});
+		setUpdateApplicationId(updateForm._id);
+	}, [updateForm, form]);
+
 	const validateSkills = (_, value) => {
 		// Check if the input contains a comma
-		if (!value.includes(',')) {
+		if (!value.includes(',') && !Array.isArray(value)) {
 			return Promise.reject('Please input your skills set with commas!');
 		}
 
@@ -37,36 +55,41 @@ const ApplicationForm = ({ handleOk }) => {
 
 	const onFinish = async (values) => {
 		try {
-			if (values.skills && typeof values.skills === 'string') {
-				values.skills = values.skills
-					.split(',')
-					.map((skill) => skill.trim());
-			}
+			if (updateForm == '') {
+				console.log('in create form');
+				if (values.skills && typeof values.skills === 'string') {
+					values.skills = values.skills
+						.split(',')
+						.map((skill) => skill.trim());
+				}
+				//Create api call
+				const data = await createApplication(values);
 
-			if (values.working_exp && values.working_exp != undefined) {
-				values.working_exp.forEach((exp) => {
-					exp.startDate = moment(new Date(exp?.startDate.$d)).format(
-						// 'DD/MM/YYYY'
-						'YYYY/MM/DD'
-					);
-					exp.endDate = moment(new Date(exp?.endDate.$d)).format(
-						// 'DD/MM/YYYY'
-						'YYYY/MM/DD'
-					);
-				});
+				if (data?.data.isSuccess) {
+					console.log('success');
+					await form.resetFields();
+					await handleOk();
+				}
 			} else {
-				values.working_exp = [];
-			}
+				console.log('in update form');
+				if (values.skills && typeof values.skills === 'string') {
+					values.skills = values.skills
+						.split(',')
+						.map((skill) => skill.trim());
+				} else {
+					values.skills = values.skills;
+				}
 
-			const data = await createApplication(values);
-
-			console.log(data);
-
-			console.log(data.isSuccess);
-			if (data?.data.isSuccess) {
-				console.log('success');
-				await form.resetFields();
-				await handleOk();
+				//update api call
+				const data = await updateApplication({
+					id: updateApplicationId,
+					data: values,
+				});
+				if (data?.data.isSuccess) {
+					console.log('success');
+					await form.resetFields();
+					await handleOk();
+				}
 			}
 		} catch (error) {
 			console.log(error);
@@ -190,6 +213,7 @@ const ApplicationForm = ({ handleOk }) => {
 					<Form.Item
 						label='Skills'
 						name='skills'
+						extra='Skills must be separate with comma'
 						rules={[
 							{
 								required: true,
@@ -202,81 +226,6 @@ const ApplicationForm = ({ handleOk }) => {
 					>
 						<Input />
 					</Form.Item>
-
-					{/* Working Experience Form.List */}
-					<Form.List name='working_exp'>
-						{(fields, { add, remove }) => (
-							<div
-								style={{
-									display: 'flex',
-									rowGap: 16,
-									flexDirection: 'column',
-								}}
-							>
-								{fields.map((field) => (
-									<Card key={field.key}>
-										<Form.Item
-											label='Company Name'
-											name={[field.name, 'companyName']}
-										>
-											<Input />
-										</Form.Item>
-										<Form.Item
-											label='Postition'
-											name={[field.name, 'position']}
-										>
-											<Input />
-										</Form.Item>
-										<Form.Item
-											label='Start Date'
-											name={[field.name, 'startDate']}
-											rules={[
-												{
-													required: true,
-													message:
-														'Please select start date!',
-												},
-											]}
-										>
-											<DatePicker
-												style={{ width: '100%' }}
-											/>
-										</Form.Item>
-										<Form.Item
-											label='End Date'
-											name={[field.name, 'endDate']}
-											rules={[
-												{
-													required: true,
-													message:
-														'Please select end date!',
-												},
-											]}
-										>
-											<DatePicker
-												style={{ width: '100%' }}
-											/>
-										</Form.Item>
-										<Button
-											type='link'
-											onClick={() => remove(field.name)}
-										>
-											Remove
-										</Button>
-									</Card>
-								))}
-
-								<Button
-									style={{ margin: '10px 0' }}
-									type='dashed'
-									onClick={() => add()}
-									block
-								>
-									Add Working Experience
-								</Button>
-							</div>
-						)}
-					</Form.List>
 				</Col>
 			</Row>
 
@@ -288,7 +237,7 @@ const ApplicationForm = ({ handleOk }) => {
 				style={{ textAlign: 'right' }}
 			>
 				<Button type='primary' htmlType='submit'>
-					Create
+					{updateForm == '' ? '	Create' : 'Update'}
 				</Button>
 			</Form.Item>
 		</Form>

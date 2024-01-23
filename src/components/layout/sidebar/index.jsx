@@ -4,6 +4,7 @@ import { Menu } from 'antd';
 import {
 	HomeOutlined,
 	UnorderedListOutlined,
+	FormOutlined,
 	LogoutOutlined,
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
@@ -28,7 +29,8 @@ const items = [
 		<UnorderedListOutlined />
 	),
 	{ type: 'divider' },
-	getItem('Logout', 'logout', '/logout', <LogoutOutlined />),
+	getItem('Experience', 'experience', '/experience', <FormOutlined />),
+	// getItem('Logout', 'logout', '/logout', <LogoutOutlined />),
 ];
 
 const Sidebar = () => {

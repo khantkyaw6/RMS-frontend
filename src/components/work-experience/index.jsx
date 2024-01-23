@@ -1,16 +1,11 @@
-import React, { useState } from 'react';
 import {
-	useGetApplicationQuery,
-	useDeleteApplicationMutation,
-} from '../../features/application/applicationApi';
-import {
+	Button,
+	Flex,
+	Popconfirm,
 	Space,
 	Table,
-	Button,
 	Tooltip,
 	Typography,
-	Popconfirm,
-	Flex,
 } from 'antd';
 import {
 	DeleteOutlined,
@@ -18,17 +13,15 @@ import {
 	EditOutlined,
 	FileAddOutlined,
 } from '@ant-design/icons';
-import ApplicationDetail from './ApplicationDetail';
+import React, { useState } from 'react';
+import { useGetExperienceQuery } from '../../features/work-experience/workExperienceApi';
 import CommonModal from '../common/modal';
-import ApplicationForm from './ApplicationForm';
+import WorkExperienceForm from './WorkExperienceForm';
 
-const Application = () => {
-	const { data: appData } = useGetApplicationQuery();
-	const [deleteApplication] = useDeleteApplicationMutation();
-	const [updateForm, setUpdateForm] = useState('');
-	const [detailFlag, setDetailFlag] = useState(false);
-	const [appDetailId, setAppDetailId] = useState(null);
+const WorkExperience = () => {
+	const [updateForm, setUpdateForm] = useState(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const { data: expData } = useGetExperienceQuery();
 
 	const showModal = () => {
 		setIsModalOpen(true);
@@ -37,13 +30,14 @@ const Application = () => {
 	const handleOk = () => {
 		setIsModalOpen(false);
 	};
+
 	const handleCancel = () => {
 		setIsModalOpen(false);
 		setUpdateForm('');
 	};
 
 	const deleteHandler = (id) => {
-		deleteApplication(id);
+		console.log(id);
 	};
 
 	const editHandler = (data) => {
@@ -51,44 +45,46 @@ const Application = () => {
 		setUpdateForm(data);
 	};
 
-	const detailHandler = (id) => {
-		setDetailFlag(true);
-		setAppDetailId(id);
-	};
+	function formatDateString(dateString) {
+		const originalDate = new Date(dateString);
+		const formattedDate = originalDate.toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: '2-digit',
+			day: '2-digit',
+		});
 
-	const detailCloseHandler = () => {
-		setDetailFlag(false);
-	};
+		return formattedDate;
+	}
 
-	const formattedData = appData?.data.map((item, index) => ({
+	const formattedData = expData?.data.map((item, index) => ({
 		...item,
+		startDate: formatDateString(item.startDate),
+		endDate: formatDateString(item.endDate),
 		key: index,
 	}));
 
 	const columns = [
 		{
-			title: 'Name',
-			dataIndex: 'name',
-			key: 'name',
-			render: (text, record) => (
-				<a onClick={() => detailHandler(record._id)}>{text}</a>
-			),
+			title: 'Company Name',
+			dataIndex: 'companyName',
+			key: 'companyName',
 		},
 		{
-			title: 'Email',
-			dataIndex: 'email',
-			key: 'email',
+			title: 'Position',
+			dataIndex: 'position',
+			key: 'position',
 		},
 		{
-			title: 'Phone',
-			dataIndex: 'phone',
-			key: 'phone',
+			title: 'Start Date',
+			dataIndex: 'startDate',
+			key: 'startDate',
 		},
 		{
-			title: 'Gender',
-			dataIndex: 'gender',
-			key: 'gender',
+			title: 'End Date',
+			dataIndex: 'endDate',
+			key: 'endDate',
 		},
+
 		{
 			title: 'Action',
 			key: 'action',
@@ -134,7 +130,7 @@ const Application = () => {
 					level={4}
 					style={{ marginTop: 0, marginBottom: 30 }}
 				>
-					Application List
+					Working Experience List
 				</Typography.Title>
 				<Button
 					onClick={showModal}
@@ -145,47 +141,24 @@ const Application = () => {
 					Create
 				</Button>
 			</Flex>
-
 			<CommonModal
 				title={
 					updateForm != ''
-						? 'Update Application'
-						: 'Create Application'
+						? 'Update Work Experience'
+						: 'Create Work Experience'
 				}
 				isModalOpen={isModalOpen}
 				handleCancel={handleCancel}
 				handleOk={handleOk}
 			>
-				<ApplicationForm updateForm={updateForm} handleOk={handleOk} />
+				<WorkExperienceForm
+					updateForm={updateForm}
+					handleOk={handleOk}
+				/>
 			</CommonModal>
 			<Table columns={columns} dataSource={formattedData} />
-			{detailFlag && (
-				<>
-					<hr />
-					<Flex
-						justify='space-between'
-						align='center'
-						style={{ margin: '20px 0' }}
-					>
-						<Typography.Title
-							level={4}
-							style={{ marginTop: 20, marginBottom: 30 }}
-						>
-							Application Detail
-						</Typography.Title>
-						<Button
-							onClick={detailCloseHandler}
-							type='text'
-							shape='circle'
-							style={{ color: 'red' }}
-							icon={<CloseOutlined />}
-						/>
-					</Flex>
-					<ApplicationDetail id={appDetailId} />
-				</>
-			)}
 		</>
 	);
 };
 
-export default Application;
+export default WorkExperience;

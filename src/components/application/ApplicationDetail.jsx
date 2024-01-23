@@ -1,13 +1,14 @@
 import { Card, Col, Row } from 'antd';
 import React from 'react';
 import { useGetApplicationDetailQuery } from '../../features/application/applicationApi';
+import { checkProfileImageLink } from '../../helper/checkImage';
 const { Meta } = Card;
 
 const ApplicationDetail = ({ id }) => {
 	console.log('app detail', id);
 	const { data: appDetail, isLoading } = useGetApplicationDetailQuery(id);
 
-	console.log(appDetail);
+	console.log({ appDetail });
 
 	return (
 		<div>
@@ -21,7 +22,11 @@ const ApplicationDetail = ({ id }) => {
 						cover={
 							<img
 								alt={appDetail?.data.name}
-								src={`http://localhost:7000/${appDetail?.data.image}`}
+								src={
+									appDetail?.data.image == ''
+										? checkProfileImageLink()
+										: `http://localhost:7000/${appDetail?.data.image}`
+								}
 							/>
 						}
 					>
@@ -50,14 +55,23 @@ const ApplicationDetail = ({ id }) => {
 								{exp.startDate
 									? new Date(
 											exp.startDate
-									  ).toLocaleDateString('en-GB')
+									  ).toLocaleDateString('en-US', {
+											month: '2-digit',
+											day: '2-digit',
+											year: 'numeric',
+									  })
 									: 'N/A'}
 							</p>
 							<p>
 								End Date - {` `}
 								{exp.endDate
 									? new Date(exp.endDate).toLocaleDateString(
-											'en-GB'
+											'en-US',
+											{
+												month: '2-digit',
+												day: '2-digit',
+												year: 'numeric',
+											}
 									  )
 									: 'N/A'}
 							</p>

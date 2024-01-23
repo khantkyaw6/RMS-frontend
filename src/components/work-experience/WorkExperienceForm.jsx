@@ -24,8 +24,6 @@ const WorkExperienceForm = ({ updateForm, handleOk }) => {
 	);
 	const [updateExperience] = useUpdateExperienceMutation();
 
-	console.log(updateForm);
-
 	const options = appData?.data.map(({ _id, name }) => ({
 		value: _id,
 		label: name,
@@ -42,8 +40,6 @@ const WorkExperienceForm = ({ updateForm, handleOk }) => {
 		moment(dateString).format('MM/DD/YYYY');
 
 	useEffect(() => {
-		console.log('in useEffect');
-		console.log({ updateForm });
 		if (updateForm !== null) {
 			form.setFieldsValue({
 				application_id: updateForm.application_id,
@@ -66,27 +62,18 @@ const WorkExperienceForm = ({ updateForm, handleOk }) => {
 		}
 		try {
 			if (updateForm == null) {
-				console.log('in create form');
-				console.log(values);
 				const data = await createExperience(values);
 				if (data?.data.isSuccess) {
-					console.log('success');
 					await form.resetFields();
 					await handleOk();
 				}
 			} else {
-				console.log('in update form');
-				console.log(values);
-
 				const data = await updateExperience({
 					id: updateForm._id,
 					data: values,
 				});
 
-				console.log(data);
-
 				if (data?.data.isSuccess) {
-					console.log('success');
 					await form.resetFields();
 					await handleOk();
 				}
@@ -234,7 +221,7 @@ const WorkExperienceForm = ({ updateForm, handleOk }) => {
 							htmlType='submit'
 							style={{ width: '100%' }}
 						>
-							Create
+							{updateForm == null ? 'Create' : 'Update'}
 						</Button>
 					</Form.Item>
 				</Col>

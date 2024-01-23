@@ -13,11 +13,7 @@ const Login = () => {
 	const navigate = useNavigate();
 	const token = useSelector(selectToken);
 
-	console.log(token);
-
 	const onFinish = async (values) => {
-		console.log(values);
-
 		const { data } = await postLogin(values);
 
 		if (!data?.isSuccess) {

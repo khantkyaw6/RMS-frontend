@@ -4,8 +4,6 @@ import { useGetAdminsQuery } from '../../features/admin/adminApi';
 const Dashboard = () => {
 	const { data: adminData } = useGetAdminsQuery();
 
-	console.log(adminData);
-
 	const columns = [
 		{ title: 'Admin Email', dataIndex: 'email', key: 'email' },
 	];

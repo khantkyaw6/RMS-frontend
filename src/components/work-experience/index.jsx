@@ -14,7 +14,10 @@ import {
 	FileAddOutlined,
 } from '@ant-design/icons';
 import React, { useState } from 'react';
-import { useGetExperienceQuery } from '../../features/work-experience/workExperienceApi';
+import {
+	useDeleteExperienceMutation,
+	useGetExperienceQuery,
+} from '../../features/work-experience/workExperienceApi';
 import CommonModal from '../common/modal';
 import WorkExperienceForm from './WorkExperienceForm';
 
@@ -22,6 +25,7 @@ const WorkExperience = () => {
 	const [updateForm, setUpdateForm] = useState(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const { data: expData } = useGetExperienceQuery();
+	const [deleteExperience] = useDeleteExperienceMutation();
 
 	const showModal = () => {
 		setIsModalOpen(true);
@@ -33,11 +37,11 @@ const WorkExperience = () => {
 
 	const handleCancel = () => {
 		setIsModalOpen(false);
-		setUpdateForm('');
+		setUpdateForm(null);
 	};
 
 	const deleteHandler = (id) => {
-		console.log(id);
+		deleteExperience(id);
 	};
 
 	const editHandler = (data) => {
@@ -99,7 +103,7 @@ const WorkExperience = () => {
 						/>
 					</Tooltip>
 					<Popconfirm
-						title='Are your sure to delete this application?'
+						title='Are your sure to delete this experience?'
 						okText='Delete'
 						cancelText='Cancle'
 						onConfirm={() => deleteHandler(record._id)}
@@ -143,9 +147,9 @@ const WorkExperience = () => {
 			</Flex>
 			<CommonModal
 				title={
-					updateForm != ''
-						? 'Update Work Experience'
-						: 'Create Work Experience'
+					updateForm == null
+						? 'Create Work Experience'
+						: 'Update Work Experience'
 				}
 				isModalOpen={isModalOpen}
 				handleCancel={handleCancel}

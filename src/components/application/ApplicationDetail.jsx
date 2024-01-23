@@ -5,10 +5,7 @@ import { checkProfileImageLink } from '../../helper/checkImage';
 const { Meta } = Card;
 
 const ApplicationDetail = ({ id }) => {
-	console.log('app detail', id);
 	const { data: appDetail, isLoading } = useGetApplicationDetailQuery(id);
-
-	console.log({ appDetail });
 
 	return (
 		<div>

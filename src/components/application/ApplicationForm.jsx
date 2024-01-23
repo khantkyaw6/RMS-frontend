@@ -56,7 +56,6 @@ const ApplicationForm = ({ updateForm, handleOk }) => {
 	const onFinish = async (values) => {
 		try {
 			if (updateForm == '') {
-				console.log('in create form');
 				if (values.skills && typeof values.skills === 'string') {
 					values.skills = values.skills
 						.split(',')
@@ -66,12 +65,10 @@ const ApplicationForm = ({ updateForm, handleOk }) => {
 				const data = await createApplication(values);
 
 				if (data?.data.isSuccess) {
-					console.log('success');
 					await form.resetFields();
 					await handleOk();
 				}
 			} else {
-				console.log('in update form');
 				if (values.skills && typeof values.skills === 'string') {
 					values.skills = values.skills
 						.split(',')
@@ -86,7 +83,6 @@ const ApplicationForm = ({ updateForm, handleOk }) => {
 					data: values,
 				});
 				if (data?.data.isSuccess) {
-					console.log('success');
 					await form.resetFields();
 					await handleOk();
 				}
